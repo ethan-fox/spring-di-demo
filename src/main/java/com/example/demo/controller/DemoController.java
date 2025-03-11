@@ -46,8 +46,12 @@ class DemoController {
 
     @PostMapping("/apply-rules")
     public List<RuleResult> applyRules(@RequestBody RuleInput ruleInput, @RequestParam(defaultValue = "false") Boolean prioritize) {
-        return this.rulesApplicator.runRules(ruleInput, prioritize);
+        return this.rulesApplicator.runRules(ruleInput, prioritize, false);
     }
     
+    @PostMapping("/apply-rules/explicit")
+    public List<RuleResult> applyPrioritizedAndExplicitRules(@RequestBody RuleInput ruleInput) {
+        return this.rulesApplicator.runRules(ruleInput, true, true);
+    }
     
 }

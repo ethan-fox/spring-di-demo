@@ -13,6 +13,7 @@ import com.example.demo.model.RuleResult;
 import com.example.demo.service.rules.IRule;
 import com.example.demo.service.rules.prioritized.IPrioritizedRule;
 
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -21,18 +22,23 @@ public class RulesApplicator {
     
     private final List<IRule> rules;
     private final List<IPrioritizedRule> prioritizedRules;
+    private final ExplicitRulesApplicator explicitRulesApplicator;
     
-    public RulesApplicator(List<IRule> rules, List<IPrioritizedRule> prioritizedRules) {
+    public RulesApplicator(List<IRule> rules, List<IPrioritizedRule> prioritizedRules, final ExplicitRulesApplicator explicitRulesApplicator) {
         this.rules = rules;
         this.prioritizedRules = prioritizedRules;
+        this.explicitRulesApplicator = explicitRulesApplicator;
     }
 
-    public List<RuleResult> runRules(RuleInput ruleInput, Boolean prioritize) {
+    // @Timed()
+    public List<RuleResult> runRules(RuleInput ruleInput, Boolean prioritize, Boolean explicit) {
         log.info("Evaluating rules ...");
         return prioritize 
-            ? runPrioritized(ruleInput)
-            .map(List::of)
-            .orElse(Collections.emptyList())
+            ? explicit
+                ? explicitRulesApplicator.applyRules(ruleInput)
+                : runPrioritized(ruleInput)
+                .map(List::of)
+                .orElse(Collections.emptyList())
             : runNonPrioritizedRules(ruleInput);
     }
 
