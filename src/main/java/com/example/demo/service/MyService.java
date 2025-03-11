@@ -10,6 +10,6 @@ public class MyService {
     }
     
     public String f() {
-        return "YES";
+        return "Hello World!";
     }
 }
