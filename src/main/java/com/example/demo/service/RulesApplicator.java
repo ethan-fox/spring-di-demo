@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import com.example.demo.model.RuleInput;
 import com.example.demo.model.RuleResult;
